@@ -8,7 +8,10 @@ class CanvasController:
         self.painting_options = options
 
     def on_mouse_drag(self, event):
-        self.image.draw_line_to(event.x, event.y, self.painting_options)
+        self.image.draw_line_to(event.x, event.y)
 
     def on_mouse_down(self, event):
         self.image.begin_drawing(event)
+
+    def on_mouse_move(self, event):
+        self.image.move_mouse(event.x, event.y)
