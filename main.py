@@ -20,6 +20,7 @@ if __name__ == '__main__':
     image.bind("<Motion>", canvas_controller.on_mouse_move)
 
     toolbar.eraser_button.configure(command=tool_controller.on_toggle_eraser)
+    toolbar.color_picker_button.configure(command=tool_controller.on_change_color_click)
 
     root.image = image
     root.toolbar = toolbar
