@@ -1,19 +1,20 @@
-from models import paintingOptions, image
+from models.paintingOptions import PaintingOptions
+from models.image import Image
 from views.window import Window
 from views.toolbar import Toolbar
 from controllers.canvasController import CanvasController
 from controllers.toolController import ToolController
 
 if __name__ == '__main__':
-    painting_options = paintingOptions.PaintingOptions()
+    painting_options = PaintingOptions()
 
     canvas_controller = CanvasController(None, painting_options)
     tool_controller = ToolController(None, None, painting_options)
 
     root = Window(None, None, canvas_controller)
 
-    toolbar = Toolbar()
-    image = image.Image(painting_options)
+    toolbar = Toolbar(painting_options)
+    image = Image(painting_options)
 
     image.bind("<B1-Motion>", canvas_controller.on_mouse_drag)
     image.bind("<1>", canvas_controller.on_mouse_down)
