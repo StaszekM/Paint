@@ -22,6 +22,7 @@ if __name__ == '__main__':
 
     toolbar.eraser_button.configure(command=tool_controller.on_toggle_eraser)
     toolbar.color_picker_button.configure(command=tool_controller.on_change_color_click)
+    toolbar.brush_width_button.configure(command=tool_controller.on_change_brush_width_click)
 
     root.image = image
     root.toolbar = toolbar
