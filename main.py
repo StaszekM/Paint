@@ -12,6 +12,7 @@ if __name__ == '__main__':
     canvas_controller = CanvasController(None, painting_options, tool_controller)
 
     root = Window(None, None, canvas_controller)
+    root.minsize(800, 650)
 
     toolbar = Toolbar(painting_options)
     image = Image(painting_options)

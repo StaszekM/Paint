@@ -57,7 +57,6 @@ class Image(Canvas):
 
         self.update()
         width, height = self.winfo_reqwidth(), self.winfo_reqheight()
-        print(width, height)
         ps = self.postscript(colormode='color', pagewidth=width, pageheight=height)
         if self.painting_options.eraser_enabled:
             self.toggle_eraser(True)
@@ -68,7 +67,6 @@ class Image(Canvas):
         img = PilImage.open(io.BytesIO(self.get_postscript().encode('utf-8')))
         self.update()
         width, height = self.winfo_reqwidth(), self.winfo_reqheight()
-        print(width, height)
         img.resize((width, height))
         return img
 
