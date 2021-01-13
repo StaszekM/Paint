@@ -17,12 +17,12 @@ class ToolController:
         if response[1] is None:
             return
         self.painting_options.brush_color = response[1]
-        self.toolbar.update_display()
+        self.update()
 
     def on_toggle_eraser(self):
         self.painting_options.eraser_enabled = not self.painting_options.eraser_enabled
         self.image.toggle_eraser(self.painting_options.eraser_enabled)
-        self.toolbar.update_display()
+        self.update()
 
     def on_change_brush_width_click(self):
         response = 0
@@ -33,4 +33,11 @@ class ToolController:
             if response < 1 or response > 10:
                 tkinter.messagebox.showwarning('Error', 'Brush width should be between 1px and 10px.')
         self.painting_options.brush_width = response
+        self.update()
+
+    def on_canvas_color_picker_click(self):
+        self.painting_options.canvas_color_picker_enabled = not self.painting_options.canvas_color_picker_enabled
+        self.update()
+
+    def update(self):
         self.toolbar.update_display()

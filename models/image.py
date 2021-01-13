@@ -20,13 +20,14 @@ class Image(Canvas):
         if self.painting_options.eraser_enabled:
             self.create_line(self.last_mouse_x, self.last_mouse_y, x, y, fill=self.painting_options.eraser_color,
                              width=self.painting_options.eraser_width, tags=('drawing',), state='disabled')
+            self.tag_raise('ui', 'all')
+            self.move_mouse(x, y)
+
         else:
             self.create_line(self.last_mouse_x, self.last_mouse_y, x, y, fill=self.painting_options.brush_color,
                              width=self.painting_options.brush_width, tags=('drawing',), state='disabled')
 
         self.last_mouse_x, self.last_mouse_y = x, y
-        self.tag_raise('ui', 'all')
-        self.move_mouse(x, y)
 
     def toggle_eraser(self, active):
         if active:
@@ -39,3 +40,14 @@ class Image(Canvas):
     def move_mouse(self, x, y):
         half_width = math.floor(self.painting_options.eraser_width / 2)
         self.coords(self.eraser_cursor, x - half_width, y - half_width, x + half_width, y + half_width)
+
+    def pick_color(self, x, y):
+        ids = self.find_overlapping(x, y, x, y)
+
+        if len(ids) > 0:
+            index = ids[-1]
+            color = self.itemcget(index, "fill")
+            color = color.upper()
+            return color
+
+        return "#FFFFFF"
