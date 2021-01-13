@@ -28,6 +28,8 @@ class ToolController:
         response = 0
         while response < 1 or response > 10:
             response = tkinter.simpledialog.askinteger('Brush', 'Set brush width (in pixels), min 1, max 10')
+            if response is None:
+                return
             if response < 1 or response > 10:
                 tkinter.messagebox.showwarning('Error', 'Brush width should be between 1px and 10px.')
         self.painting_options.brush_width = response
