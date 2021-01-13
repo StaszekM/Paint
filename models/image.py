@@ -5,7 +5,7 @@ import math
 
 class Image(Canvas):
     def __init__(self, painting_options: PaintingOptions, *args, **kw):
-        self.canvas = super().__init__(*args, background='#FFFFFF', **kw)
+        self.canvas = super().__init__(*args, background='#FFFFFF', width=800, height=600, **kw)
         self.last_mouse_x = None
         self.last_mouse_y = None
         self.painting_options = painting_options
