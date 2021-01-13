@@ -1,11 +1,16 @@
 from tkinter import *
+from PIL import Image as PilImage
+from PIL import ImageTk
 from models.paintingOptions import PaintingOptions
+from algorithms.algorithms import Processor
 import math
+import io
 
 
 class Image(Canvas):
     def __init__(self, painting_options: PaintingOptions, *args, **kw):
         self.canvas = super().__init__(*args, background='#FFFFFF', width=800, height=600, **kw)
+        self.image_temp = None
         self.last_mouse_x = None
         self.last_mouse_y = None
         self.painting_options = painting_options
@@ -42,12 +47,36 @@ class Image(Canvas):
         self.coords(self.eraser_cursor, x - half_width, y - half_width, x + half_width, y + half_width)
 
     def pick_color(self, x, y):
-        ids = self.find_overlapping(x, y, x, y)
+        img = self.get_image()
+        value = img.getpixel((x, y))
+        return '#%02x%02x%02x' % value
 
-        if len(ids) > 0:
-            index = ids[-1]
-            color = self.itemcget(index, "fill")
-            color = color.upper()
-            return color
+    def get_postscript(self):
+        if self.painting_options.eraser_enabled:
+            self.toggle_eraser(False)
 
-        return "#FFFFFF"
+        self.update()
+        width, height = self.winfo_reqwidth(), self.winfo_reqheight()
+        print(width, height)
+        ps = self.postscript(colormode='color', pagewidth=width, pageheight=height)
+        if self.painting_options.eraser_enabled:
+            self.toggle_eraser(True)
+
+        return ps
+
+    def get_image(self):
+        img = PilImage.open(io.BytesIO(self.get_postscript().encode('utf-8')))
+        self.update()
+        width, height = self.winfo_reqwidth(), self.winfo_reqheight()
+        print(width, height)
+        img.resize((width, height))
+        return img
+
+    def process_image(self, processor: Processor):
+        processed_image = processor.process(self.get_image())
+
+        self.image_temp = ImageTk.PhotoImage(processed_image)
+        self.update()
+        self.delete('drawing')
+        self.update()
+        self.create_image(0, -1, anchor=NW, image=self.image_temp, tags=('drawing',))

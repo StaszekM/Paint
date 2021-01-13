@@ -5,8 +5,7 @@ import tkinter.colorchooser
 import tkinter.simpledialog
 import tkinter.filedialog
 import tkinter.messagebox
-from PIL import Image as PilImage
-import io
+from algorithms.algorithms import GaussianBlur, ColorInverter, Colorizer
 
 
 class ToolController:
@@ -46,21 +45,24 @@ class ToolController:
         path = tkinter.filedialog.asksaveasfile('w', filetypes=['Pictures {png}'], defaultextension='.png')
         if path is None:
             return
+        self.save_image(path.name)
 
-        width, height = self.image.winfo_width(), self.image.winfo_height()
+    def on_blur_button_click(self):
+        self.image.process_image(GaussianBlur())
 
-        postscript = self.image.postscript(colormode='color', pagewidth=width, pageheight=height)
-        try:
-            img = PilImage.open(io.BytesIO(postscript.encode('utf-8')))
-            img = img.resize((width, height))
-            img.save(path.name, format='png')
+    def on_invert_colors_button_click(self):
+        self.image.process_image(ColorInverter())
 
-            # self.image.delete('drawing')
-            # self.imageloaded = ImageTk.PhotoImage(PilImage.open(path.name))
-            # self.image.create_image(0, 0, anchor=NW, image=self.imageloaded, tags=('drawing',))
-
-        except OSError:
-            tkinter.messagebox.showerror('Error', 'Could not save file. Make sure you have Ghostscript installed.')
+    def on_posterize_button_click(self):
+        self.image.process_image(Colorizer())
 
     def update(self):
         self.toolbar.update_display()
+
+    def save_image(self, path):
+        img = self.image.get_image()
+        try:
+            img = img.resize((self.image.winfo_width(), self.image.winfo_height()))
+            img.save(path, format='png')
+        except OSError:
+            tkinter.messagebox.showerror('Error', 'Could not save file. Make sure you have Ghostscript installed.')

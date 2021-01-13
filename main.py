@@ -26,6 +26,9 @@ if __name__ == '__main__':
     toolbar.brush_width_button.configure(command=tool_controller.on_change_brush_width_click)
     toolbar.canvas_color_picker_button.configure(command=tool_controller.on_canvas_color_picker_click)
     toolbar.save_as_button.configure(command=tool_controller.on_save_as_button_click)
+    toolbar.blur_button.configure(command=tool_controller.on_blur_button_click)
+    toolbar.color_invert_button.configure(command=tool_controller.on_invert_colors_button_click)
+    toolbar.colorize_button.configure(command=tool_controller.on_posterize_button_click)
 
     root.image = image
     root.toolbar = toolbar
