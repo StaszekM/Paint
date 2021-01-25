@@ -12,7 +12,8 @@ if __name__ == '__main__':
     canvas_controller = CanvasController(None, painting_options, tool_controller)
 
     root = Window(None, None, canvas_controller)
-    root.minsize(800, 650)
+    root.title('Paint')
+    root.minsize(800, 670)
 
     toolbar = Toolbar(painting_options)
     image = Image(painting_options)
@@ -30,6 +31,7 @@ if __name__ == '__main__':
     toolbar.blur_button.configure(command=tool_controller.on_blur_button_click)
     toolbar.color_invert_button.configure(command=tool_controller.on_invert_colors_button_click)
     toolbar.colorize_button.configure(command=tool_controller.on_posterize_button_click)
+    toolbar.open_image_button.configure(command=tool_controller.on_open_image)
 
     root.image = image
     root.toolbar = toolbar

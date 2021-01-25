@@ -78,3 +78,27 @@ class Image(Canvas):
         self.delete('drawing')
         self.update()
         self.create_image(0, -1, anchor=NW, image=self.image_temp, tags=('drawing',))
+
+    def draw_image(self, path):
+        self.update()
+        self.delete('drawing')
+        self.update()
+
+        image = PilImage.open(path, mode='r', formats=None)
+        imgWidth, imgHeight = image.size
+        canvWidth, canvHeight = self.winfo_reqwidth(), self.winfo_reqheight()
+
+        if imgWidth > canvWidth or imgHeight > canvHeight:
+            imgRatio = imgWidth / imgHeight
+            canvRatio = canvWidth / canvHeight
+            if imgRatio > canvRatio:
+                scale = imgWidth / canvWidth
+            else:
+                scale = imgHeight / canvHeight
+            image = image.resize((int(imgWidth // scale), int(imgHeight // scale)))
+
+        imgWidth, imgHeight = image.size
+
+        self.image_temp = ImageTk.PhotoImage(image)
+        self.create_image((canvWidth - imgWidth) / 2, (canvHeight - imgHeight) / 2, anchor=NW, image=self.image_temp,
+                          tags=('drawing',))

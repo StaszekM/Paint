@@ -56,6 +56,13 @@ class ToolController:
     def on_posterize_button_click(self):
         self.image.process_image(Colorizer())
 
+    def on_open_image(self):
+        path = tkinter.filedialog.askopenfile('r', filetypes=['Pictures {png}', 'Pictures {jpg}'])
+
+        if path is None:
+            return
+        self.open_image(path.name)
+
     def update(self):
         self.toolbar.update_display()
 
@@ -66,3 +73,6 @@ class ToolController:
             img.save(path, format='png')
         except OSError:
             tkinter.messagebox.showerror('Error', 'Could not save file. Make sure you have Ghostscript installed.')
+
+    def open_image(self, path):
+        self.image.draw_image(path)

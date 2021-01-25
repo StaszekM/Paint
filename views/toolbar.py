@@ -10,7 +10,7 @@ class Toolbar(Frame):
         self.painting_options = painting_options
         self.images = [PhotoImage(file=icon) for icon in
                        [icons.eraser, icons.paint, icons.width, icons.colorpicker, icons.save, icons.effect,
-                        icons.paint_white]]
+                        icons.paint_white, icons.folder]]
 
         self.eraser_button = Button(self, background='#FFFFFF', text='Erase', image=self.images[0], compound=BOTTOM)
         self.color_picker_button = Button(self, bg=painting_options.brush_color, text='Color', image=self.images[6],
@@ -29,15 +29,19 @@ class Toolbar(Frame):
         self.colorize_button = Button(self, background='#FFFFFF', text='Colorize', image=self.images[5],
                                       compound=BOTTOM)
 
+        self.open_image_button = Button(self, background='#FFFFFF', text='Open', image=self.images[7], compound=BOTTOM)
+
     def setup(self):
+        self.grid_configure()
         self.eraser_button.grid(row=0, column=0)
         self.color_picker_button.grid(row=0, column=1)
         self.brush_width_button.grid(row=0, column=2)
         self.canvas_color_picker_button.grid(row=0, column=3)
         self.save_as_button.grid(row=0, column=4)
-        self.blur_button.grid(row=0, column=5)
-        self.color_invert_button.grid(row=0, column=6)
-        self.colorize_button.grid(row=0, column=7)
+        self.open_image_button.grid(row=0, column=5)
+        self.blur_button.grid(row=0, column=6)
+        self.color_invert_button.grid(row=0, column=7)
+        self.colorize_button.grid(row=0, column=8)
 
     def update_display(self):
         self.eraser_button.configure(bg='#00FF00' if self.painting_options.eraser_enabled else '#FFFFFF')
