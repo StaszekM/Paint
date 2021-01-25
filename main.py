@@ -32,6 +32,7 @@ if __name__ == '__main__':
     toolbar.color_invert_button.configure(command=tool_controller.on_invert_colors_button_click)
     toolbar.colorize_button.configure(command=tool_controller.on_posterize_button_click)
     toolbar.open_image_button.configure(command=tool_controller.on_open_image)
+    toolbar.select_button.configure(command=tool_controller.on_select_button_click)
 
     root.image = image
     root.toolbar = toolbar

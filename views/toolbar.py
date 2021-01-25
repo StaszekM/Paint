@@ -1,5 +1,5 @@
 from tkinter import *
-from models.paintingOptions import PaintingOptions
+from models.paintingOptions import PaintingOptions, SelectState
 from icons import icons
 import colorsys
 
@@ -31,6 +31,8 @@ class Toolbar(Frame):
 
         self.open_image_button = Button(self, background='#FFFFFF', text='Open', image=self.images[7], compound=BOTTOM)
 
+        self.select_button = Button(self, background='#FFFFFF', text='Select and copy')
+
     def setup(self):
         self.grid_configure()
         self.eraser_button.grid(row=0, column=0)
@@ -42,6 +44,7 @@ class Toolbar(Frame):
         self.blur_button.grid(row=0, column=6)
         self.color_invert_button.grid(row=0, column=7)
         self.colorize_button.grid(row=0, column=8)
+        self.select_button.grid(row=0, column=9)
 
     def update_display(self):
         self.eraser_button.configure(bg='#00FF00' if self.painting_options.eraser_enabled else '#FFFFFF')
@@ -55,6 +58,30 @@ class Toolbar(Frame):
         self.canvas_color_picker_button.configure(
             bg='#00FF00' if self.painting_options.canvas_color_picker_enabled else '#FFFFFF')
         self.eraser_button.configure(
-            state='disabled' if self.painting_options.canvas_color_picker_enabled else 'normal')
+            state='disabled' if self.painting_options.canvas_color_picker_enabled or self.painting_options.canvas_select_state != SelectState.DISABLED else
+            'normal')
         self.canvas_color_picker_button.configure(
-            state='disabled' if self.painting_options.eraser_enabled else 'normal')
+            state='disabled' if self.painting_options.eraser_enabled or self.painting_options.canvas_select_state != SelectState.DISABLED else
+            'normal')
+
+        self.select_button.configure(
+            bg='#00FF00' if self.painting_options.canvas_select_state == SelectState.ENABLED else '#FFFFFF')
+        self.select_button.configure(
+            state='disabled' if self.painting_options.canvas_color_picker_enabled or self.painting_options.eraser_enabled else 'normal')
+
+        if self.painting_options.canvas_select_state == SelectState.DISABLED:
+            text = 'Select and copy'
+        elif self.painting_options.canvas_select_state == SelectState.ENABLED:
+            text = 'Drag to select'
+        elif self.painting_options.canvas_select_state == SelectState.SELECTING:
+            text = 'Selecting...'
+        else:
+            text = 'Abort'
+        self.select_button.configure(text=text)
+
+        disable_others = self.painting_options.canvas_select_state != SelectState.DISABLED or self.painting_options.canvas_color_picker_enabled or self.painting_options.eraser_enabled
+        self.save_as_button.configure(state='disabled' if disable_others else 'normal')
+        self.open_image_button.configure(state='disabled' if disable_others else 'normal')
+        self.blur_button.configure(state='disabled' if disable_others else 'normal')
+        self.color_invert_button.configure(state='disabled' if disable_others else 'normal')
+        self.colorize_button.configure(state='disabled' if disable_others else 'normal')

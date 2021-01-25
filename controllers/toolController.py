@@ -1,4 +1,4 @@
-from models.paintingOptions import PaintingOptions
+from models.paintingOptions import PaintingOptions, SelectState
 from views.toolbar import Toolbar
 from models.image import Image
 import tkinter.colorchooser
@@ -61,7 +61,23 @@ class ToolController:
 
         if path is None:
             return
+
+        yes_no = tkinter.messagebox.askokcancel('Opening',
+                                                'Do you want to open this file? All canvas contents will be erased.')
+        if not yes_no:
+            return
+
         self.open_image(path.name)
+
+    def on_select_button_click(self):
+        if self.painting_options.canvas_select_state == SelectState.ENABLED:
+            self.painting_options.canvas_select_state = SelectState.DISABLED
+        elif self.painting_options.canvas_select_state == SelectState.DISABLED:
+            self.painting_options.canvas_select_state = SelectState.ENABLED
+        elif self.painting_options.canvas_select_state == SelectState.PLACING:
+            self.image.abort_placing()
+            self.painting_options.canvas_select_state = SelectState.DISABLED
+        self.update()
 
     def update(self):
         self.toolbar.update_display()
