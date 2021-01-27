@@ -10,7 +10,7 @@ class Toolbar(Frame):
         self.painting_options = painting_options
         self.images = [PhotoImage(file=icon) for icon in
                        [icons.eraser, icons.paint, icons.width, icons.colorpicker, icons.save, icons.effect,
-                        icons.paint_white, icons.folder]]
+                        icons.paint_white, icons.folder, icons.select, icons.cancel]]
 
         self.eraser_button = Button(self, background='#FFFFFF', text='Erase', image=self.images[0], compound=BOTTOM)
         self.color_picker_button = Button(self, bg=painting_options.brush_color, text='Color', image=self.images[6],
@@ -31,7 +31,8 @@ class Toolbar(Frame):
 
         self.open_image_button = Button(self, background='#FFFFFF', text='Open', image=self.images[7], compound=BOTTOM)
 
-        self.select_button = Button(self, background='#FFFFFF', text='Select and copy')
+        self.select_button = Button(self, background='#FFFFFF', text='Select and copy', image=self.images[8],
+                                    compound=BOTTOM)
 
     def setup(self):
         self.grid_configure()
@@ -64,20 +65,25 @@ class Toolbar(Frame):
             state='disabled' if self.painting_options.eraser_enabled or self.painting_options.canvas_select_state != SelectState.DISABLED else
             'normal')
 
-        self.select_button.configure(
-            bg='#00FF00' if self.painting_options.canvas_select_state == SelectState.ENABLED else '#FFFFFF')
-        self.select_button.configure(
-            state='disabled' if self.painting_options.canvas_color_picker_enabled or self.painting_options.eraser_enabled else 'normal')
-
         if self.painting_options.canvas_select_state == SelectState.DISABLED:
             text = 'Select and copy'
+            icon = self.images[8]
         elif self.painting_options.canvas_select_state == SelectState.ENABLED:
-            text = 'Drag to select'
+            text = 'Cancel'
+            icon = self.images[9]
         elif self.painting_options.canvas_select_state == SelectState.SELECTING:
             text = 'Selecting...'
+            icon = self.images[8]
         else:
-            text = 'Abort'
+            text = 'Cancel'
+            icon = self.images[9]
         self.select_button.configure(text=text)
+        self.select_button.configure(image=icon)
+        self.select_button.configure(
+            bg='#FF0000' if self.painting_options.canvas_select_state in (
+                SelectState.ENABLED, SelectState.PLACING) else '#FFFFFF')
+        self.select_button.configure(
+            state='disabled' if self.painting_options.canvas_color_picker_enabled or self.painting_options.eraser_enabled else 'normal')
 
         disable_others = self.painting_options.canvas_select_state != SelectState.DISABLED or self.painting_options.canvas_color_picker_enabled or self.painting_options.eraser_enabled
         self.save_as_button.configure(state='disabled' if disable_others else 'normal')
